@@ -2,17 +2,151 @@
 
 <h3> 리눅스 환경 설정 </h3>
 
-우분투 사용
+centos7 사용
 
 virtual box 네트워크에 NAT네트워크, 호스트전용 어댑터 설정
 
-sudo apt-get update
+yum update
 
-sudo apt-get upgrade
+yum upgrade
 
-sudo apt-get install ssh
+yum install openssh
 
-sudo apt-get install net-tools
+yum install net-tools
 
-<h3> 클라우데라 설치 </h3>
+* centos설치후 인터넷 연결 안됐을 때
 
+nmcli d 로 이더넷 카드 확인 후 disconnected이면
+
+nmtui를 통해 연결해주자
+
+<h1> 2021-10-14 </h1>
+
+<h3> 리눅스 환경설정 이어서.. + 하둡, 주키퍼 등 설치</h3>
+
+https://earthconquest.tistory.com/235 블로그 참고
+
+* 자바 설치
+
+yum list -installed java* 또는 rpa -qa | grep java로 기존에 설치된 자바 패키지가 있다면 "yum remove 패키지명" 으로 삭제
+
+자바 설치 후, 심볼릭 링크 지정 -> ln -s jdk1.8.0_291/ java
+
+/etc/profile에 환경변수 추가
+
+export JAVA_HOME=/usr/local/java  
+export PATH=$PATH:$JAVA_HOME/bin  
+export CLASSPATH="."
+
+이후 java -version으로 확인
+
+* 방화벽 중지
+
+systemctl stop firewalld  
+systemctl disable firewalld  
+firewall-cmd --state
+
+/etc/hostname 에 hostname 지정 -> master, worker1, worker2로 했음
+
+/etc/hosts에 ip, 도메인, 호스트 추가
+
+127.0.0.1   localhost master
+
+192.168.56.107 master.com master  
+192.168.56.110 worker1.com worker1  
+192.168.56.111 worker2.com worker2  
+
+/etc/sysconfig/network에 도메인명 추가
+
+NETWORKING=yes
+NETWORKING IPV6=no
+HOSTNAME=hadoop01.com
+
+/etc/selinux/config에서 SELINUX=disabled로 수정
+
+스왑 메모리 추가
+
+sysctl -w vm.swappiness=100
+
+/etc/sysctl.conf 에 vm.swappiness=100 추가
+
+/etc/rc.local 에 다음과 같이 추가
+
+echo never > /sys/kernel/mm/transparent_hugepage/enabled  
+echo never > /sys/kernel/mm/transparent_hugepage/defrag
+
+/etc/security/limits.conf 에 파일 디스크립터 설정 추가
+
+root soft nofile 65536  
+root hard nofile 65536  
+* soft nofile 65536  
+* hadr nofile 65536  
+root soft nproc 32768  
+root hard nproc 32768  
+* soft nproc 32768  
+* hard nproc 32768
+
+* ssh키 생성 및 복제
+
+ssh-keygen -t rsa
+
+ssh-copy-id -i /home/gwangil/.ssh/id_rsa.pub gwangil@master
+
+ssh-copy-id -i /home/gwangil/.ssh/id_rsa.pub gwangil@worker1
+
+ssh-copy-id -i /home/gwangil/.ssh/id_rsa.pub gwangil@worker2
+
+* protobuf 설치 : 직렬화 라이브러리, 서버간 데이터 통신 또는 다른 종류의 언어로 개발된 통신을 바이너리 데이터로 전송해줌
+
+su - root  
+cd /usr/local  
+wget https://github.com/google/protobuf/releases/download/v2.5.0/protobuf-2.5.0.tar.gz  
+tar xvfz protobuf-2.5.0.tar.gz  
+cd protobuf-2.5.0  
+./configure  
+make  
+make install
+
+* 나는 gcc 설치가 안돼서 빌드가 안됐음 다음을 설치
+
+yum install gcc glibc glibc-common gd gd-devel -y
+
+yum install gcc-c++
+
+* zookeeper 설치
+
+zookeeper 유저 추가 후, slave 서버에 전달
+
+주키퍼 설치
+
+wget https://mirror.navercorp.com/apache/zookeeper/zookeeper-3.6.3/apache-zookeeper-3.6.3-bin.tar.gz
+
+tar xvfz apache-zookeeper-3.6.3-bin.tar.gz 
+
+zoo.cfg에 다음 내용 변경
+
+dataDir=/home/zookeeper/apache-zookeeper-3.6.3-bin/data
+
+server.1=0.0.0.0:2888:3888  -> 자기 자신의 host를 인식 못하는 경우가 있는데 0.0.0.0으로 하면 된다고 함
+server.2=worker1:2888:3888  
+server.3=worker2:2888:3888
+
+dataDir 경로에 myid 추가하고 위 server설정에 해당하는 숫자를 넣고 저장 (master의 경우 1)
+
+bashrc에 alias 추가
+
+alias zoo-start="/home/zookeeper/apache-zookeeper-3.6.3-bin/bin/zkServer.sh start"  
+alias zoo-status="/home/zookeeper/apache-zookeeper-3.6.3-bin/bin/zkServer.sh status"  
+alias zoo-stop="/home/zookeeper/apache-zookeeper-3.6.3-bin/bin/zkServer.sh stop"
+
+source $HOME/.bashrc
+
+환경 변수 추가
+
+export ZOOKEEPER_HOME=/home/zookeeper/apache-zookeeper-3.6.3-bin
+
+PATH=$PATH:$HOME/.local/bin:$HOME/bin:$ZOOKEEPER_HOME/bin
+
+export PATH
+
+zoo-status해보면 하나가 leader로 선출된것 볼수 
