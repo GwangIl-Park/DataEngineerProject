@@ -149,4 +149,45 @@ PATH=$PATH:$HOME/.local/bin:$HOME/bin:$ZOOKEEPER_HOME/bin
 
 export PATH
 
-zoo-status해보면 하나가 leader로 선출된것 볼수 
+zoo-status해보면 하나가 leader로 선출된것 볼수 있음
+
+<h1> 2021-10-15 </h1>
+
+* 하둡 설치
+
+wget http://apache.mirror.cdnetworks.com/hadoop/common/hadoop-3.3.0/hadoop-3.3.0.tar.gz
+
+tar -xvzf hadoop-3.3.0.tar.gz
+
+ln -s hadoop-3.3.0 hadoop
+
+* 환경변수 설정
+
+export JAVA_HOME=/usr/local/java  
+export HADOOP_HOME=/home/gwangil/hadoop  
+export HADOOP_INSTALL=$HADOOP_HOME  
+export HADOOP_MAPRED_HOME=$HADOOP_HOME  
+export HADOOP_COMMON_HOME=$HADOOP_HOME  
+export HADOOP_HDFS_HOME=$HADOOP_HOME  
+export HADOOP_YARN_HOME=$HADOOP_HOME  
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native  
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin  
+export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"  
+
+* 하둡 환경 변수 설정
+
+hadoop/etc/hadoop/hadoop-env.sh파일에 JAVA_HOME=/usr/local/java
+ 
+core-site.xml, hdfs-site.xml, yarn-env.sh, yarn-site.xml, workers 수정
+
+master 서버에 주키퍼 초기화 $HADOOP_HOME/bin/hdfs zkfc -formatZK
+
+각 서버에 하둡 저널노드 실행 $HADOOP_HOME/bin/hdfs --daemon start journalnode
+
+master서버 name노드 포맷 후 실행
+
+hdfs namenode -format
+
+$HADOOP_HOME/bin/hdfs --daemon start namenode
+
+* standby namenode 실행전 서버1의 메타데이터 복사해오기 - 여기서 막힘...
