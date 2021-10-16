@@ -190,4 +190,14 @@ hdfs namenode -format
 
 $HADOOP_HOME/bin/hdfs --daemon start namenode
 
-* standby namenode 실행전 서버1의 메타데이터 복사해오기 - 여기서 막힘...
+<h1> 2021-10-16 </h1>
+
+* standby namenode 실행전 마스터노드의 메타데이터 복사해오기 - hdfs namenode -bootstrapStandby (standby)
+
+* 주키퍼 장애 컨트롤러 실행 - $HADOOP_HOME/bin/hdfs --daemon start zkfc (master, standby)
+
+* datanode 실행 - $HADOOP_HOME/bin/hdfs --daemon start datanode
+
+* yarn 실행 - start-yarn.sh (master에서만)
+
+* history 서버 실행 - $HADOOP_HOME/bin/mapred --daemon start historyserver (master, standby)
