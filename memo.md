@@ -194,6 +194,10 @@ $HADOOP_HOME/bin/hdfs --daemon start namenode
 
 * standby namenode 실행전 마스터노드의 메타데이터 복사해오기 - hdfs namenode -bootstrapStandby (standby)
 
+여기서 계속 실패해서 애먹었는데, 포트가 127.0.0.1로 열려 있었음 (netstat -tnlp로 확인)
+
+어찌어찌하다 다시 돌아왔는데 아마 hostname에서 localhost를 빼서일까..?
+
 * 주키퍼 장애 컨트롤러 실행 - $HADOOP_HOME/bin/hdfs --daemon start zkfc (master, standby)
 
 * datanode 실행 - $HADOOP_HOME/bin/hdfs --daemon start datanode
