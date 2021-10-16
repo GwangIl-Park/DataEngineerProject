@@ -208,7 +208,7 @@ $HADOOP_HOME/bin/hdfs --daemon start namenode
 
 <h3> 카프카 설치 </h3>
 
-* 카프카 설치
+* 카프카 설치 (https://team-platform.tistory.com/13?category=829378)
 
 wget http://apache.mirror.cdnetworks.com/kafka/2.7.1/kafka_2.12-2.7.1.tgz
 
