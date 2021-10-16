@@ -153,7 +153,7 @@ zoo-status해보면 하나가 leader로 선출된것 볼수 있음
 
 <h1> 2021-10-15 </h1>
 
-* 하둡 설치
+<h3> 하둡 설치 </h3>
 
 wget http://apache.mirror.cdnetworks.com/hadoop/common/hadoop-3.3.0/hadoop-3.3.0.tar.gz
 
@@ -205,3 +205,38 @@ $HADOOP_HOME/bin/hdfs --daemon start namenode
 * yarn 실행 - start-yarn.sh (master에서만)
 
 * history 서버 실행 - $HADOOP_HOME/bin/mapred --daemon start historyserver (master, standby)
+
+<h3> 카프카 설치 </h3>
+
+* 카프카 설치
+
+wget http://apache.mirror.cdnetworks.com/kafka/2.7.1/kafka_2.12-2.7.1.tgz
+
+tar -xvf kafka_2.12-2.7.1.tgz
+
+* zookeeper.properties 수정
+
+dataDir="zookeeper dataDir"
+
+initLimit=5  
+syncLimit=2  
+server.1=master:2888:3888  
+server.2=worker1:2888:3888  
+server.3=worker2:2888:3888  
+
+* server.properties 수정
+
+broker.id=1  
+listeners=PLAINTEXT://:9092  
+advertised.listeners=PLAINTEXT://master:9092  
+zookeeper.connect=master:2181, worker1:2181, worker2:2181
+
+* kafka 서버 시작
+
+bin/kafka-server-start.sh -daemon config/server.properties
+
+* topic 관련
+
+토픽 생성 : bin/kafka-topics.sh --create --zookeeper master:2181, worker1:2181, worker2:2181 --replication-factor 3 --partitions 1 --topic test_topic
+
+토픽 삭제 : bin/kafka-topics.sh --delete --zookeeper master:2181, worker1:2181, worker2:2181 --topic test_topic
