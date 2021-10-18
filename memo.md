@@ -240,3 +240,17 @@ bin/kafka-server-start.sh -daemon config/server.properties
 토픽 생성 : bin/kafka-topics.sh --create --zookeeper master:2181, worker1:2181, worker2:2181 --replication-factor 3 --partitions 1 --topic test_topic
 
 토픽 삭제 : bin/kafka-topics.sh --delete --zookeeper master:2181, worker1:2181, worker2:2181 --topic test_topic
+
+<h1> 2021-10-18 </h1>
+
+* producer, consumer 구현을 위한 파이썬 3 설치 및 카프카 파이썬 설치
+
+yum install epel-release  
+yum install python3  
+pip3 install kafka-python  
+
+* cli에서 producer 및 consumer 테스트
+
+consumer : bin/kafka-console-consumer.sh --bootstrap-server master:9092,worker1:9092,worker2:9092 --topic test_topic --partition 0 --from-beginning
+
+producer : bin/kafka-console-producer.sh --broker-list master:9092,worker1:9092,worker2:9092 -topic test_topic
