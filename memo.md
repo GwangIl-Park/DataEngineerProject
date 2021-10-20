@@ -254,3 +254,13 @@ pip3 install kafka-python
 consumer : bin/kafka-console-consumer.sh --bootstrap-server master:9092,worker1:9092,worker2:9092 --topic test_topic --partition 0 --from-beginning
 
 producer : bin/kafka-console-producer.sh --broker-list master:9092,worker1:9092,worker2:9092 -topic test_topic
+
+<h1>2021-10-20</h1>
+
+* confluent-kafka 설치
+
+hdfs에 적재하기 위해 이것저것 시도해보다 도저히 안됐는데
+
+confluent-kafka에서 hdfs connector를 지원해서 그걸 사용해서 다시 해야할듯
+
+사용법은 기존 kafka와 차이가 없는듯 하다
