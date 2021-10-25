@@ -264,3 +264,27 @@ hdfs에 적재하기 위해 이것저것 시도해보다 도저히 안됐는데
 confluent-kafka에서 hdfs connector를 지원해서 그걸 사용해서 다시 해야할듯
 
 사용법은 기존 kafka와 차이가 없는듯 하다
+
+<h1>2021-10-25</h1>
+
+* 스파크 설치
+
+* test_producer로 담긴것 확인
+
+* hdfs connector 설치 (https://www.confluent.io/hub/confluentinc/kafka-connect-hdfs)
+
+* sink connector 생성
+
+curl -X POST worker1:8083/connectors -H "Content-Type: application/json" -d '{  
+  "name":"test",  
+  "config":{  
+    "connector.class": "io.confluent.connect.hdfs.HdfsSinkConnector",  
+    "topics": "test",  
+    "hdfs.url": "hdfs://worker1:9000",  
+    "flush.size":"3"  
+    }  
+}'
+
+hdfs에 저장은 안되었지만 일단 드디어 connector 생성 성공
+
+- active node 가 worker로 되어있는데 바꿀수있는 방법이 없을까..?
