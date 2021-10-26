@@ -288,3 +288,9 @@ curl -X POST worker1:8083/connectors -H "Content-Type: application/json" -d '{
 hdfs에 저장은 안되었지만 일단 드디어 connector 생성 성공
 
 - active node 가 worker로 되어있는데 바꿀수있는 방법이 없을까..?
+
+<h1>2021-10-26</h1>
+
+https://gymbombom.github.io/2019/12/11/1-hadoop-HA-cluster-install/
+
+하둡 클러스터 세팅 깔끔한곳
