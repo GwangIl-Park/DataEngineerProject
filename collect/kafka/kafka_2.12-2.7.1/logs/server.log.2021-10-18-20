@@ -1,2 +1,0 @@
-[2021-10-18 20:22:16,366] INFO Creating topic sample with configuration {} and initial partition assignment Map(0 -> ArrayBuffer(2)) (kafka.zk.AdminZkClient)
-[2021-10-18 20:22:16,422] INFO [KafkaApi-1] Auto creation of topic sample with 1 partitions and replication factor 1 is successful (kafka.server.KafkaApis)
