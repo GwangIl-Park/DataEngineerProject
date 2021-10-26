@@ -294,3 +294,5 @@ hdfs에 저장은 안되었지만 일단 드디어 connector 생성 성공
 https://gymbombom.github.io/2019/12/11/1-hadoop-HA-cluster-install/
 
 하둡 클러스터 세팅 깔끔한곳
+
+하둡 초기화 통해 master node를 active로 변경, master node도 worker node로
