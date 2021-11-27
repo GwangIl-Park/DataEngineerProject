@@ -296,3 +296,58 @@ https://gymbombom.github.io/2019/12/11/1-hadoop-HA-cluster-install/
 하둡 클러스터 세팅 깔끔한곳
 
 하둡 초기화 통해 master node를 active로 변경, master node도 worker node로
+
+
+<h1>2021-11-27</h1>
+
+confluent kafka를 통해 hdfs로 저장하는 것은 잘 안돼서 포기..
+
+fluentd를 통해 수집하기로 변경
+
+설치 : curl -L https://toolbelt.treasuredata.com/sh/install-redhat-td-agent3.sh | sh
+
+실행 : /etc/init.d/td-agent start
+
+hdfs 연동(input : twitter): /etc/td-agent/td-agent.conf
+
+<match twitter>  
+  @type webhdfs  
+  host master
+  port 50070  
+  path "/twitter/%Y%m%d_%H.#{Socket.gethostname}.log"  
+  username gwangil  
+</match>  
+
+위내용 추가
+
+hdfs-site.xml에 아래 내용 추가
+
+<property>  
+  <name>dfs.webhdfs.enabled</name>  
+  <value>true</value>  
+</property>  
+<property>  
+  <name>dfs.support.append</name>  
+  <value>true</value>  
+</property>  
+<property>  
+  <name>dfs.support.broken.append</name>  
+  <value>true</value>  
+</property>  
+
+트위터 플러그인 설치 : stall fluent-plugin-twitter
+
+트위터 연동
+
+<source>  
+  @type twitter  
+  consumer_key 4eTTOR4C7AkZiEkhkibV5akJl  
+  consumer_secret EGF0y3cxtA6xVTcO5xDZkSVtNJMACIcvPY7gpbNkmyxruGv1SC  
+  access_token 1461989023363133442-kCy0KBm5JxNrZfhbDl1ytCjdVd7otz  
+  access_token_secret u88CsHk52bEBdsmZSFL6H6C6iTW8eReXHATsJga5ZeZc2  
+  tag twitter  
+  keyword 'game'  
+  output_format nest  
+  timeline sampling  
+  lang en  
+</source>
