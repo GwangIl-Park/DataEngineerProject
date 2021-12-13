@@ -351,3 +351,13 @@ hdfs-site.xml에 아래 내용 추가
   timeline sampling  
   lang en  
 </source>
+
+<h1> 2021-12-13 </h1>
+
+tweepy를 통해서 sparkstreaming 부터 해보기로..
+
+pip install tweepy
+
+developer.twitter.com에서 키 정보 생성
+
+읽어와서 카운트 작업까지는 했는데, sparkstreaming에 대한 공부가 좀 더 필요할 듯 하다..
